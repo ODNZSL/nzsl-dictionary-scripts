@@ -1,6 +1,6 @@
 # nzsl-scripts
 
-This repository holds scripts that are useful for the creation of the NZSL Android and iOS applications.
+This repository holds scripts that are useful for the creation of the NZSL Android and iOS applications. These scripts are written in Python 3 and will not work with Python 2.
 
 ## build-assets.py
 
