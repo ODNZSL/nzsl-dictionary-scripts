@@ -1,6 +1,26 @@
 # nzsl-scripts
 
-This repository holds scripts that are useful for the creation of the NZSL Android and iOS applications. These scripts are written in Python 3 and will not work with Python 2.
+This repository holds scripts that are useful for the creation of the NZSL Android and iOS applications.
+
+## python3
+
+These scripts are written in Python 3 and will not work with Python 2.
+You can install it via
+
+```
+brew install python3
+```
+
+if you have not already done so.
+
+## Usage summary
+
+```
+cd /path/to/this/repo
+
+# you must provide both AND android and an iOS path
+python3 ./build-assets.py -i "/path/to/nzsl-dictionary-ios" -a "/path/to/nzsl-dictionary-android"
+```
 
 ## build-assets.py
 
