@@ -5,13 +5,16 @@ This repository holds scripts that are useful for the creation of the NZSL Andro
 ## python3
 
 These scripts are written in Python 3 and will not work with Python 2.
-You can install it via
+
+If you are using OSX you can install it via
 
 ```
 brew install python3
 ```
 
 if you have not already done so.
+
+Debian/Ubuntu users have access to the python3 command.
 
 ## Usage summary
 
