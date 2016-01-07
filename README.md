@@ -12,6 +12,8 @@ This is a wholistic script that performs all the steps needed to get all the nec
 * Step 4: Write out nzsl.dat for Android
 * Step 5: Write out sqlite nzsl.db for iOS
 * Step 6: Merge images together into one folder
+* Step 6a: Generate search thumbnails
+* Step 6b: Shrink images for distribution
 * Step 7a: Update iOS app images
 * Step 7b: Update iOS app nzsl.db
 * Step 8a: Update Android app images
