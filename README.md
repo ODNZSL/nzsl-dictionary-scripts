@@ -32,7 +32,7 @@ Debian/Ubuntu users will need to install it with
 sudo apt-get install imagemagick
 ```
 
-### Optiping
+### Optipng
 
 Image compression also uses `optipng` as the final step
 
