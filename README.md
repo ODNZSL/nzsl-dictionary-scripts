@@ -2,7 +2,11 @@
 
 This repository holds scripts that are useful for the creation of the NZSL Android and iOS applications.
 
-## python3
+## Dependencies
+
+These scripts use some commands you will need to have available for a successful run
+
+### python3
 
 These scripts are written in Python 3 and will not work with Python 2.
 
@@ -12,9 +16,35 @@ If you are using OSX you can install it via
 brew install python3
 ```
 
-if you have not already done so.
-
 Debian/Ubuntu users have access to the python3 command.
+
+### Imagemagick
+
+Image compression requires the `mogrify` and `convert` commands from imagemagick
+
+If you are using OSX you can install it via
+```
+brew install imagemagick
+```
+
+Debian/Ubuntu users will need to install it with
+```
+sudo apt-get install imagemagick
+```
+
+### Optipng
+
+Image compression also uses `optipng` as the final step
+
+If you are using OSX you can install it via
+```
+brew install optipng
+```
+
+Debian/Ubuntu users will need to install it with
+```
+sudo apt-get install optipng
+```
 
 ## Usage summary
 
@@ -35,6 +65,8 @@ This is a wholistic script that performs all the steps needed to get all the nec
 * Step 4: Write out nzsl.dat for Android
 * Step 5: Write out sqlite nzsl.db for iOS
 * Step 6: Merge images together into one folder
+* Step 6a: Generate search thumbnails
+* Step 6b: Shrink images for distribution
 * Step 7a: Update iOS app images
 * Step 7b: Update iOS app nzsl.db
 * Step 8a: Update Android app images
