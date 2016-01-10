@@ -110,7 +110,7 @@ os.makedirs(ios_asset_path)
 
 # re-create the .gitkeep file in the assets dir (it is not necessary for the
 # app but keeps that dir in the git repo)
-os.system("touch " + android_asset_path + ".gitkeep")
+os.system("touch " + ios_asset_path + ".gitkeep")
 
 for path, dirs, files in os.walk("assets/"):
     for filename in files:
