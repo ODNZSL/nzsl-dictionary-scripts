@@ -141,7 +141,9 @@ for path, dirs, files in os.walk("assets/"):
 
 print("Step 8b: Update Android app nzsl.dat")
 android_db_path = options.android + "/app/src/main/assets/db/"
-os.makedirs(android_db_path)
+if not os.path.exists(android_db_path):
+    os.makedirs(android_db_path)
+
 os.system("cp nzsl.dat " + android_db_path)
 
 if options.cleanup:
