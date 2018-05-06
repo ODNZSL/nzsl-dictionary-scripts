@@ -4,3 +4,6 @@ dnzsl-xmldump.xml
 nzsl.dat
 nzsl.db
 picture/*
+nzsl-dictionary-android
+nzsl-dictionary-ios
+*-bak
