@@ -43,6 +43,9 @@ def rename_assets(root):
          for asset in entry.find("ASSET"):
              if ("picture" == asset.tag):
                  old_filename = os.path.join(asset.tag, asset.text)
+                 if not os.path.isfile(old_filename):
+                     print("Picture {} does not exist!", old_filename)
+                     continue
                  new_filename = normalize_image_filename(old_filename)
                  os.rename(old_filename, new_filename)
                  asset.text = new_filename.replace('picture/', '', 1)
