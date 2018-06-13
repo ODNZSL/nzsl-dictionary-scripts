@@ -60,7 +60,7 @@ def write_datfile(root):
                 sec.text if sec is not None else "",
                 maori.text if maori is not None else "",
                 os.path.basename(picture.text) if picture is not None else "",
-                "http://freelex.nzsl.vuw.ac.nz/dnzsl/freelex/assets/"+video.text if video is not None else   "",
+                "http://freelex.nzsl.vuw.ac.nz/dnzsl/freelex/assets/"+video.text.replace(".webm", ".mp4") if video is not None else   "",
                 handshape.text if handshape is not None else "",
                 entry.find("location").text,
             ]), file=f)
