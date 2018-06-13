@@ -2,6 +2,7 @@
 from optparse import OptionParser
 import sys
 import os
+import re
 import xml.etree.ElementTree as ET
 import shutil
 
@@ -42,7 +43,12 @@ with open(filename) as f:
     data = f.read()
 data = data.replace("\x05", "")
 data = data.replace("<->", "")
-root = ET.fromstring(data)
+
+# Replace ampersands, which are XML control characters, with
+# the appropriate XML escape sequence
+data = re.sub(r"&(?=[^#])", "&#038;", data)
+parser = ET.XMLParser(encoding="UTF-8")
+root = ET.XML(data, parser=parser)
 
 print("Step 2: Fetching images from freelex")
 freelex.fetch_assets(root)
