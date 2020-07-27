@@ -7,7 +7,7 @@ import shutil
 import sqlite3
 
 def fetch_database(filename):
-    r = urllib.request.urlopen('http://freelex.nzsl.vuw.ac.nz/dnzsl/freelex/publicsearch?xmldump=1')
+    r = urllib.request.urlopen('https://nzsl-assets.vuw.ac.nz/dnzsl/freelex/publicsearch?xmldump=1')
     with open(filename, "wb") as f:
         f.write(r.read())
 
@@ -23,7 +23,7 @@ def fetch_assets(root):
                         os.makedirs(os.path.dirname(fn))
                     except IOError:
                         pass
-                    r = urllib.request.urlopen("http://freelex.nzsl.vuw.ac.nz/dnzsl/freelex/assets/" +       urllib.parse.quote(asset.text))
+                    r = urllib.request.urlopen("https://nzsl-assets.vuw.ac.nz/dnzsl/freelex/assets/" +       urllib.parse.quote(asset.text))
                     with open(fn, "wb") as f:
                         f.write(r.read())
 
@@ -60,7 +60,7 @@ def write_datfile(root):
                 sec.text if sec is not None else "",
                 maori.text if maori is not None else "",
                 os.path.basename(picture.text) if picture is not None else "",
-                "http://freelex.nzsl.vuw.ac.nz/dnzsl/freelex/assets/"+video.text.replace(".webm", ".mp4") if video is not None else   "",
+                "https://nzsl-assets.vuw.ac.nz/dnzsl/freelex/assets/"+video.text.replace(".webm", ".mp4") if video is not None else   "",
                 handshape.text if handshape is not None else "",
                 entry.find("location").text,
             ]), file=f)
