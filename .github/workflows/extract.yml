@@ -6,15 +6,46 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: make build update_assets
-      - uses: actions/upload-artifact@v2
+      - run: tar -cf assets.tar.gz assets
+  release:
+    runs-on: ubuntu-latest
+    name: "Create release using extracted Freelex data"
+    steps:
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          name: assets
-          path: assets
-      - uses: actions/upload-artifact@v2
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            Quarterly release of NZSL Dictionary data
+          draft: false
+          prerelease: false
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: nzsl.dat
-          path: nzsl.dat
-      - uses: actions/upload-artifact@v2
+          upload_url: ${{ steps.create_release.outputs.upload_url }} 
+          asset_path: ./assets.tar.gz
+          asset_name: assets.tar.gz
+          asset_content_type: application/gzip
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: nzsl.db
-          path: nzsl.db
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./nzsl.db
+          asset_name: nzsl.db
+          asset_content_type: application/vnd.sqlite3
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./nzsl.dat
+          asset_name: nzsl.dat
+          asset_content_type: text/plain
