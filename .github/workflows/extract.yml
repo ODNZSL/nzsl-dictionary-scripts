@@ -1,0 +1,20 @@
+on: [push]
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    name: 'Extracts and prepares Freelex data for use by native applications'
+    steps:
+      - uses: actions/checkout@v2
+      - run: make build update_assets
+      - uses: actions/upload-artifact@v2
+        with:
+          name: assets
+          path: assets
+      - uses: actions/upload-artifact@v2
+        with:
+          name: nzsl.dat
+          path: nzsl.dat
+      - uses: actions/upload-artifact@v2
+        with:
+          name: nzsl.db
+          path: nzsl.db
