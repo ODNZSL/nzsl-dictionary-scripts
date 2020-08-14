@@ -27,18 +27,28 @@ def fetch_assets(root):
                     with open(fn, "wb") as f:
                         f.write(r.read())
 
-def rename_assets(root):
 # Modify filenames to match the Android requirements (lowercase a-z and _ only)
+# Since iOS uses the same data source (the .dat file), update iOS to use the same image names.
+def normalize_image_filename(filename):
+    normalized_filename = filename.replace('-', '_').lower()
+    num_of_periods = normalized_filename.count('.')
+    if (num_of_periods > 1):
+        normalized_filename = normalized_filename.replace('.', '_', num_of_periods - 1)
+
+    return normalized_filename
+
+
+def rename_assets(root):
      for entry in root.iter("entry"):
          for asset in entry.find("ASSET"):
              if ("picture" == asset.tag):
-                 oldfn = os.path.join(asset.tag, asset.text)
-                 newfn = oldfn.replace('-', '_').lower()
-                 num_of_periods = newfn.count('.')
-                 if (num_of_periods > 1):
-                     newfn = newfn.replace('.', '_', num_of_periods - 1)
-                 os.rename(oldfn, newfn)
-                 asset.text = newfn.replace('picture/', '', 1)
+                 old_filename = os.path.join(asset.tag, asset.text)
+                 if not os.path.isfile(old_filename):
+                     print("Picture {} does not exist!", old_filename)
+                     continue
+                 new_filename = normalize_image_filename(old_filename)
+                 os.rename(old_filename, new_filename)
+                 asset.text = new_filename.replace('picture/', '', 1)
 
 def write_datfile(root):
     with open("nzsl.dat", "w") as f:
@@ -59,7 +69,7 @@ def write_datfile(root):
                 entry.find("glossmain").text,
                 sec.text if sec is not None else "",
                 maori.text if maori is not None else "",
-                os.path.basename(picture.text) if picture is not None else "",
+                os.path.basename(normalize_image_filename(picture.text)) if picture is not None else "",
                 "https://nzsl-assets.vuw.ac.nz/dnzsl/freelex/assets/"+video.text.replace(".webm", ".mp4") if video is not None else   "",
                 handshape.text if handshape is not None else "",
                 entry.find("location").text,
