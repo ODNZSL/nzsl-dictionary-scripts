@@ -88,7 +88,7 @@ for path, dirs, files in os.walk("assets/"):
         os.system(optipng_cmd)
 
 if options.cleanup:
-    print("Step 9: Cleanup")
+    print("Step 7: Cleanup")
     os.remove("dnzsl-xmldump.xml")
     os.remove("nzsl.dat")
     os.remove("nzsl.db")
