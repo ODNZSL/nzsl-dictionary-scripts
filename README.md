@@ -2,9 +2,18 @@
 
 This repository holds scripts that are useful for the creation of the NZSL Android and iOS applications.
 
-## Dependencies
 
-These scripts use some commands you will need to have available for a successful run
+## Build - Docker
+
+A Dockerfile is provided in this repository to make it easier to run the scripts. A Makefile is provided with
+some very simple commands to build and run the image.
+
+You can run `make build update_assets` to build the Docker image and then generate the assets and database files.
+Expect this process to take between 2 and 4 hours.
+
+## Build - Non-Docker
+
+To build without Docker, there are some dependencies you will need to have available on your PATH.
 
 ### python3
 
