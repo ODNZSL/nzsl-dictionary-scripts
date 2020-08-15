@@ -63,6 +63,8 @@ cd /path/to/this/repo
 python3 ./build-assets.py 
 ```
 
+Expect this process to take between 2 and 4 hours.
+
 ## build-assets.py
 
 This is a holistic script that performs all the steps needed to get all the necessary assets from the NZSL Freelex server. It does a number of steps:
