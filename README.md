@@ -66,7 +66,7 @@ python3 ./build-assets.py -i "/path/to/nzsl-dictionary-ios" -a "/path/to/nzsl-di
 
 ## build-assets.py
 
-This is a wholistic script that performs all the steps needed to get all the necessary assets from the NZSL Freelex server. It does a number of steps:
+This is a holistic script that performs all the steps needed to get all the necessary assets from the NZSL Freelex server. It does a number of steps:
 
 * Step 1: Fetching the latest signs from Freelex
 * Step 2: Fetching images from Freelex
