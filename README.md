@@ -60,8 +60,7 @@ sudo apt-get install optipng
 ```
 cd /path/to/this/repo
 
-# you must provide both AND android and an iOS path
-python3 ./build-assets.py -i "/path/to/nzsl-dictionary-ios" -a "/path/to/nzsl-dictionary-android"
+python3 ./build-assets.py 
 ```
 
 ## build-assets.py
@@ -78,7 +77,9 @@ This is a holistic script that performs all the steps needed to get all the nece
 * Step 6b: Shrink images for distribution
 * Step 7: Cleanup (optional, requires -c flag)
 
-To call the script you must provide the iOS and Android app base paths. The end result is your apps are updated with the latest sign databases and images, ready for building.
+At the end of this process, you will find pictures (diagrams + search thumbnails), in the 'assets/` folder, and the
+application databases in 'nzsl.dat' and 'nzsl.db'. The content of the two data files is the same, but they represent the 
+data in different formats.
 
 ## freelex.py
 
