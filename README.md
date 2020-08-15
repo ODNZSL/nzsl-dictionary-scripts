@@ -2,6 +2,11 @@
 
 This repository holds scripts that are useful for the creation of the NZSL Android and iOS applications.
 
+## Quick access to assets
+
+An scheduled build runs quarterly to produce the assets and data files for the NZSL Dictionary applications to use.
+If you are after these assets and are not interested in the absolute latest data, you can download these files without
+having to wait for them to build from the [Releases](https://github.com/odnzsl/nzsl-dictionary-scripts/releases) tab.
 
 ## Build - Docker
 
