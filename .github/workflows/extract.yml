@@ -1,4 +1,7 @@
-on: [push]
+on:
+  schedule:
+  # Run quarterly - Jan, Mar, Jun, Sept, at 1PM UTC (~ 1AM NZT)
+  - cron: "0 13 * 1,3,6,9 *"
 jobs:
   extract:
     runs-on: ubuntu-latest
