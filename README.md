@@ -2,9 +2,23 @@
 
 This repository holds scripts that are useful for the creation of the NZSL Android and iOS applications.
 
-## Dependencies
+## Quick access to assets
 
-These scripts use some commands you will need to have available for a successful run
+An scheduled build runs quarterly to produce the assets and data files for the NZSL Dictionary applications to use.
+If you are after these assets and are not interested in the absolute latest data, you can download these files without
+having to wait for them to build from the [Releases](https://github.com/odnzsl/nzsl-dictionary-scripts/releases) tab.
+
+## Build - Docker
+
+A Dockerfile is provided in this repository to make it easier to run the scripts. A Makefile is provided with
+some very simple commands to build and run the image.
+
+You can run `make build update_assets` to build the Docker image and then generate the assets and database files.
+Expect this process to take between 2 and 4 hours.
+
+## Build - Non-Docker
+
+To build without Docker, there are some dependencies you will need to have available on your PATH.
 
 ### python3
 
@@ -51,13 +65,14 @@ sudo apt-get install optipng
 ```
 cd /path/to/this/repo
 
-# you must provide both AND android and an iOS path
-python3 ./build-assets.py -i "/path/to/nzsl-dictionary-ios" -a "/path/to/nzsl-dictionary-android"
+python3 ./build-assets.py 
 ```
+
+Expect this process to take between 2 and 4 hours.
 
 ## build-assets.py
 
-This is a wholistic script that performs all the steps needed to get all the necessary assets from the NZSL Freelex server. It does a number of steps:
+This is a holistic script that performs all the steps needed to get all the necessary assets from the NZSL Freelex server. It does a number of steps:
 
 * Step 1: Fetching the latest signs from Freelex
 * Step 2: Fetching images from Freelex
@@ -67,13 +82,11 @@ This is a wholistic script that performs all the steps needed to get all the nec
 * Step 6: Merge images together into one folder
 * Step 6a: Generate search thumbnails
 * Step 6b: Shrink images for distribution
-* Step 7a: Update iOS app images
-* Step 7b: Update iOS app nzsl.db
-* Step 8a: Update Android app images
-* Step 8b: Update Android app nzsl.dat
-* Step 9: Cleanup (optional, requires -c flag)
+* Step 7: Cleanup (optional, requires -c flag)
 
-To call the script you must provide the iOS and Android app base paths. The end result is your apps are updated with the latest sign databases and images, ready for building.
+At the end of this process, you will find pictures (diagrams + search thumbnails), in the 'assets/` folder, and the
+application databases in 'nzsl.dat' and 'nzsl.db'. The content of the two data files is the same, but they represent the 
+data in different formats.
 
 ## freelex.py
 

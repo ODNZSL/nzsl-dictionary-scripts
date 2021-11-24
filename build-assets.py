@@ -12,27 +12,9 @@ def print_run_msg(msg):
     print(" - Running: " + msg)
 
 parser = OptionParser()
-parser.add_option("-i", "--ios",
-                  help="location of iOS app root", metavar="IOS_PATH")
-parser.add_option("-a", "--android",
-                  help="location of Android app root", metavar="ANDROID_PATH")
 parser.add_option("-c", action="store_true", dest="cleanup", help="clean up files after execution")
 
 (options, args) = parser.parse_args()
-
-if (options.ios == None or options.android == None):
-    print("Missing iOS or Android path, please see build-assets.py -h")
-    sys.exit(1)
-
-if (os.path.isdir(options.ios) == False or
-    os.path.exists(options.ios + '/NZSLDict/main.m') == False):
-    print("Invalid iOS path")
-    sys.exit(1)
-
-if (os.path.isdir(options.android) == False or
-    os.path.exists(options.android + '/build.gradle') == False):
-    print("Invalid Android path")
-    sys.exit(1)
 
 filename = 'dnzsl-xmldump.xml'
 
@@ -105,55 +87,8 @@ for path, dirs, files in os.walk("assets/"):
         print_run_msg(optipng_cmd)
         os.system(optipng_cmd)
 
-print("Step 7a: Update iOS app images")
-
-ios_asset_path = options.ios + "/Data/picture/"
-
-if os.path.isdir(ios_asset_path):
-    shutil.rmtree(ios_asset_path)
-
-os.makedirs(ios_asset_path)
-
-# re-create the .gitkeep file in the assets dir (it is not necessary for the
-# app but keeps that dir in the git repo)
-os.system("touch " + ios_asset_path + ".gitkeep")
-
-for path, dirs, files in os.walk("assets/"):
-    for filename in files:
-        cp_cmd = "cp assets/" + filename + " " + ios_asset_path
-        print_run_msg(cp_cmd)
-        os.system(cp_cmd)
-
-print("Step 7b: Update iOS app nzsl.db")
-os.system("cp nzsl.db " + options.ios + "/Data/")
-
-print("Step 8a: Update Android app images")
-android_asset_path = options.android + "/app/src/main/assets/images/signs/"
-
-if os.path.isdir(android_asset_path):
-    shutil.rmtree(android_asset_path)
-
-os.makedirs(android_asset_path)
-
-# re-create the .gitkeep file in the assets dir (it is not necessary for the
-# app but keeps that dir in the git repo)
-os.system("touch " + android_asset_path + ".gitkeep")
-
-for path, dirs, files in os.walk("assets/"):
-    for filename in files:
-        cp_cmd = "cp assets/" + filename + " " + android_asset_path
-        print_run_msg(cp_cmd)
-        os.system(cp_cmd)
-
-print("Step 8b: Update Android app nzsl.dat")
-android_db_path = options.android + "/app/src/main/assets/db/"
-if not os.path.exists(android_db_path):
-    os.makedirs(android_db_path)
-
-os.system("cp nzsl.dat " + android_db_path)
-
 if options.cleanup:
-    print("Step 9: Cleanup")
+    print("Step 7: Cleanup")
     os.remove("dnzsl-xmldump.xml")
     os.remove("nzsl.dat")
     os.remove("nzsl.db")
