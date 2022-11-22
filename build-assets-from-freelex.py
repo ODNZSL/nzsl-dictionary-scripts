@@ -1,18 +1,21 @@
 #!/usr/bin/python
-from optparse import OptionParser
-import sys
 import os
 import re
-import xml.etree.ElementTree as ET
 import shutil
+import sys
+import xml.etree.ElementTree as ET
+from optparse import OptionParser
 
 import freelex
+
 
 def print_run_msg(msg):
     print(" - Running: " + msg)
 
+
 parser = OptionParser()
-parser.add_option("-c", action="store_true", dest="cleanup", help="clean up files after execution")
+parser.add_option("-c", action="store_true", dest="cleanup",
+                  help="clean up files after execution")
 
 (options, args) = parser.parse_args()
 
@@ -58,7 +61,8 @@ for path, dirs, files in os.walk("assets/"):
         os.system(shave_cmd)
 
         # Then we make thumbnails of the border-free images
-        create_thumbnail_cmd = "convert -resize x92 assets/" + filename + " assets/50." + filename
+        create_thumbnail_cmd = "convert -resize x92 assets/" + \
+            filename + " assets/50." + filename
         print_run_msg(create_thumbnail_cmd)
         os.system(create_thumbnail_cmd)
 
