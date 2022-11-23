@@ -5,6 +5,6 @@ dnzsl-xmldump.xml
 nzsl.dat
 nzsl.db
 picture/*
-signbank-*
+/signbank-*
 nzsl-dictionary-android
 nzsl-dictionary-ios
