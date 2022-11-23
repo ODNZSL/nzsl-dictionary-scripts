@@ -6,6 +6,7 @@ import sqlite3
 import sys
 
 import requests
+from requests.adapters import HTTPAdapter, Retry
 
 DEFAULT_SIGNBANK_HOST = os.getenv("SIGNBANK_HOST", "https://signbank.nzsl.nz")
 SIGNBANK_DATASET_ID = os.getenv("SIGNBANK_DATASET_ID", 1)
@@ -20,6 +21,15 @@ def signbank_session():
            data={'username': SIGNBANK_USERNAME, 'password': SIGNBANK_PASSWORD,
                  'csrfmiddlewaretoken': s.cookies['csrftoken']},
            headers={'Referer': DEFAULT_SIGNBANK_HOST})
+
+    return s
+
+
+def s3_session():
+    s = requests.Session()
+    retries = Retry(total=5, backoff_factor=1,
+                    status_forcelist=[502, 503, 504])
+    s.mount('https://', HTTPAdapter(max_retries=retries))
 
     return s
 
@@ -94,7 +104,7 @@ def fetch_gloss_assets(data, database_filename, output_folder):
         # We don't need to download videos, just know where they are
         if filename.endswith(".png"):
             if not os.path.exists(filename):
-                asset_request = requests.get(entry['Videofile'])
+                asset_request = s3_session().get(entry['Videofile'])
                 with open(filename, "wb") as asset_file:
                     asset_file.write(asset_request.content)
                 print("downloaded", end=", ")
