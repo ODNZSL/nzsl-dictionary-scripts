@@ -19,14 +19,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: ${{steps.date.outputs.date}}
-          release_name: Quarterly release as at ${{steps.date.outputs.date}}
+          tag_name: freelex-${{steps.date.outputs.date}}
+          release_name: Freelex quarterly release as at ${{steps.date.outputs.date}}
           body: |
-            Every quarter, the native dictionary applications are updated from the main 
+            Every quarter, the native dictionary applications are updated from the main
             NZSL Dictionary from this release. If you wish to use a 'snapshot' of the dictionary,
-            these files may be useful. 
+            these files may be useful.
 
-            NZSL Dictionary data by Deaf Studies Research Unit, Victoria University of Wellington is licensed under 
+            NZSL Dictionary data by Deaf Studies Research Unit, Victoria University of Wellington is licensed under
             a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
           draft: false
           prerelease: false
@@ -35,7 +35,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} 
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./assets.tar.gz
           asset_name: assets.tar.gz
           asset_content_type: application/gzip
