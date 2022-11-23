@@ -1,0 +1,66 @@
+on:
+  push:
+    branches:
+      - feature/export-from-signbank
+  schedule:
+  # Run monthly at 1PM UTC (~ 1AM NZT)
+  - cron: 0 13 1 * *
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    name: 'Extracts and prepares Signbank data for use by native applications'
+    steps:
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+      - uses: actions/checkout@v2
+      - run: make build update_signbank_assets
+        env:
+          SIGNBANK_HOST: ${{ secrets.SIGNBANK_HOST }}
+          SIGNBANK_USERNAME: ${{ secrets.SIGNBANK_USERNAME }}
+          SIGNBANK_PASSWORD: ${{ secrets.SIGNBANK_PASSWORD }}
+      - run: tar -cf assets.tar.gz assets
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: signbank-${{steps.date.outputs.date}}
+          release_name: Monthly release of NZSL Signbank data as at ${{steps.date.outputs.date}}
+          body: |
+            Every quarter, the native dictionary applications are updated from the main
+            NZSL Dictionary from this release. If you wish to use a 'snapshot' of the dictionary,
+            these files may be useful.
+
+            NZSL Dictionary data by Deaf Studies Research Unit, Victoria University of Wellington is licensed under
+            a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+          draft: false
+          prerelease: false
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./assets.tar.gz
+          asset_name: assets.tar.gz
+          asset_content_type: application/gzip
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./nzsl.db
+          asset_name: nzsl.db
+          asset_content_type: application/vnd.sqlite3
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./nzsl.dat
+          asset_name: nzsl.dat
+          asset_content_type: text/plain
