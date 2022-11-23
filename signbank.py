@@ -17,7 +17,9 @@ def signbank_session():
     s = requests.Session()
     s.get("%s/accounts/login/" % DEFAULT_SIGNBANK_HOST)
     s.post("%s/accounts/login/" % DEFAULT_SIGNBANK_HOST,
-           data={'username': SIGNBANK_USERNAME, 'password': SIGNBANK_PASSWORD, 'csrfmiddlewaretoken': s.cookies['csrftoken']})
+           data={'username': SIGNBANK_USERNAME, 'password': SIGNBANK_PASSWORD,
+                 'csrfmiddlewaretoken': s.cookies['csrftoken']},
+           headers={'Referer': DEFAULT_SIGNBANK_HOST})
 
     return s
 
