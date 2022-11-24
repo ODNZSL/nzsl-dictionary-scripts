@@ -1,10 +1,8 @@
 #!/usr/bin/python
 import os
-import pdb
 import re
 import shutil
 import sys
-import xml.etree.ElementTree as ET
 from optparse import OptionParser
 
 import signbank
