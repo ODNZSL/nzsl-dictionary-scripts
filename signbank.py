@@ -13,6 +13,9 @@ SIGNBANK_DATASET_ID = os.getenv("SIGNBANK_DATASET_ID", 1)
 SIGNBANK_USERNAME = os.getenv("SIGNBANK_USERNAME")
 SIGNBANK_PASSWORD = os.getenv("SIGNBANK_PASSWORD")
 
+##
+# Start a requests session that is authenticated to Signbank
+
 
 def signbank_session():
     s = requests.Session()
@@ -23,6 +26,12 @@ def signbank_session():
            headers={'Referer': DEFAULT_SIGNBANK_HOST})
 
     return s
+
+##
+# Start a requests session that is set up to retry S3 requests.
+# This resolves an issue where S3 occasionally resets the connection
+# when downloading a large number of files. It also allows for temporary
+# failures in a request.
 
 
 def s3_session():
@@ -48,10 +57,10 @@ def fetch_gloss_export_file(filename):
 
 
 def parse_signbank_csv(filename):
-  with open(filename, 'r') as f:
-    reader = csv.reader(f)
-    headers = next(reader, None)
-    return [{h: x for (h, x) in zip(headers, row)} for row in reader]
+    with open(filename, 'r') as f:
+        reader = csv.reader(f)
+        headers = next(reader, None)
+        return [{h: x for (h, x) in zip(headers, row)} for row in reader]
 
 
 ##########################
@@ -81,7 +90,6 @@ def fetch_gloss_assets(data, database_filename, output_folder):
       """
     )
 
-    # data = data[0:100]  # Testing, only process the first 100 lines
     for entry in data:
         print(f"{entry['Gloss']} ({entry['Video_type']})", end=" ")
         gloss_parts = entry['Gloss'].split(':')
@@ -160,6 +168,10 @@ def normalize_asset_filename(filename):
         return normalized_filename
 
 
+# The .dat file is used by the Android application, rather than SQLite, for
+# historical reasons. It only includes the data required by the application, not
+# including new data added to the SQLite database.
+
 def write_datfile(database_filename, dat_file_filename):
     db = sqlite3.connect(database_filename)
     db.row_factory = sqlite3.Row
@@ -174,6 +186,10 @@ def write_datfile(database_filename, dat_file_filename):
                 row['handshape'] or '',
                 row['location']
             ]), file=f)
+
+# The SQLite database is used by all primary applications other than the Android application.
+# It includes a table containing the core dictionary data (words), and references to assets (videos).
+# Generally, vocabulary follows historical terminology rather than aligning with Signbank at this stage.
 
 
 def write_sqlitefile(data, database_filename):
@@ -252,6 +268,10 @@ def copy_images_to_one_folder(source, dest):
 
 def normalize_location(location_str):
     return re.sub(r'\A\d{2} - ', '', location_str)
+
+##
+# Replace accented characters with their lowercased, unaccented equivalents.
+# Note that this is a non-exhaustive list, and there are more resilient ways to do this.
 
 
 def normalise(s):
