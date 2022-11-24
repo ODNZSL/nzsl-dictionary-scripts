@@ -186,7 +186,8 @@ def write_sqlitefile(data, database_filename):
           gloss, minor, maori, picture, video, handshape, location, location_identifier, target, age_groups,
           contains_numbers boolean, hint, id, inflection_manner_and_degree boolean, inflection_plural boolean,
           inflection_temporal boolean, is_directional boolean, is_fingerspelling boolean, is_locatable boolean,
-          one_or_two_handed boolean, related_to, usage, usage_notes, word_classes
+          one_or_two_handed boolean, related_to, usage, usage_notes, word_classes, gloss_normalized,
+          minor_normalized, maori_normalized
         )
       """
     )
@@ -196,6 +197,9 @@ def write_sqlitefile(data, database_filename):
             normalise(entry['gloss_main']), normalise(entry['gloss_secondary']), normalise(entry['gloss_maori']))
         entry.update({
             "target": target,
+            "gloss_normalized": normalise(entry["gloss_main"]),
+            "minor_normalized": normalise(entry["gloss_secondary"]),
+            "maori_normalized": normalise(entry["gloss_maori"]),
             "location_identifier": entry["location_name"],
             "location": normalize_location(entry["location_name"])
         })
@@ -225,7 +229,10 @@ def write_sqlitefile(data, database_filename):
               :related_to,
               :usage,
               :usage_notes,
-              :word_classes
+              :word_classes,
+              :gloss_normalized,
+              :minor_normalized,
+              :maori_normalized
             )
           """, entry)
     db.commit()
