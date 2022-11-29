@@ -217,6 +217,12 @@ def write_sqlitefile(data, database_filename):
     for entry in data:
         target = "{}|{}|{}".format(
             normalise(entry['gloss_main']), normalise(entry['gloss_secondary']), normalise(entry['gloss_maori']))
+
+        # Transform 'True'/'False' to boolean values - 0/1
+        entry = {k: v if v not in ("True", "False") else (
+            1 if v == "True" else 0) for k, v in entry.items()}
+
+        # Augment entry with additional attributes
         entry.update({
             "target": target,
             "gloss_normalized": normalise(entry["gloss_main"]),
