@@ -135,6 +135,12 @@ def fetch_gloss_assets(data, database_filename, output_folder):
             )
             print("assigned as main video", end=", ")
 
+        if video_type.startswith("finalexample"):
+            # finalexample{1,2,3,4} - this won't scale to double digits
+            display_order = int(video_type[-1])
+            db.execute("UPDATE examples SET video = :url WHERE word_id = :gloss_id AND display_order = :display_order",
+                       {'display_order': display_order, 'gloss_id': gloss_id, 'url': url})
+
         # Insert the video data
         db.execute(
             """
@@ -251,9 +257,29 @@ def write_sqlitefile(data, database_filename):
               :maori_normalized
             )
           """, entry)
+        add_examples(entry, db)
     db.commit()
     db.close()
 
+
+def add_examples(entry, db):
+    db.execute(
+        "CREATE TABLE IF NOT EXISTS examples (word_id, display_order, sentence, translation, video)")
+
+    for i in [1, 2, 3, 4]:
+        sentence = entry[f"videoexample{i}"]
+        if not sentence:
+            continue
+
+        db.execute(
+            "INSERT INTO examples VALUES (:word_id, :display_order, :sentence, :translation, NULL)",
+            {
+                "word_id": entry["id"],
+                "display_order": i,
+                "sentence": sentence,
+                "translation": entry[f"videoexample{i}_translation"]
+            }
+        )
 
 def copy_images_to_one_folder(source, dest):
     if (os.path.isdir(dest)):
