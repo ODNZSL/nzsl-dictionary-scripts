@@ -265,9 +265,22 @@ def write_sqlitefile(data, database_filename):
             )
           """, entry)
         add_examples(entry, db)
+        add_topics(entry, db)
     db.commit()
     db.close()
 
+
+def add_topics(entry, db):
+    db.execute(
+        "CREATE TABLE IF NOT EXISTS topics (name varchar PRIMARY KEY UNIQUE)")
+    db.execute("CREATE TABLE IF NOT EXISTS word_topics (word_id, topic_name)")
+    for topic_name in entry["semantic_field"].split("; "):
+        if not topic_name.strip():
+            continue
+        db.execute("INSERT INTO topics VALUES (:name) ON CONFLICT DO NOTHING",
+                   {"name": topic_name})
+        db.execute("INSERT INTO word_topics VALUES (:word_id, :topic_name) ON CONFLICT DO NOTHING",
+                   {"word_id":  entry["id"], "topic_name": topic_name})
 
 def add_examples(entry, db):
     db.execute(
