@@ -275,7 +275,8 @@ def add_topics(entry, db):
         "CREATE TABLE IF NOT EXISTS topics (name varchar PRIMARY KEY UNIQUE)")
     db.execute("CREATE TABLE IF NOT EXISTS word_topics (word_id, topic_name)")
     for topic_name in entry["semantic_field"].split("; "):
-        if not topic_name.strip():
+        topic_name = topic_name.strip()
+        if not topic_name:
             continue
         db.execute("INSERT INTO topics VALUES (:name) ON CONFLICT DO NOTHING",
                    {"name": topic_name})
