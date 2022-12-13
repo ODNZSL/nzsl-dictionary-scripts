@@ -3,7 +3,6 @@ import os
 import re
 import shutil
 import sqlite3
-import sys
 
 import requests
 from requests.adapters import HTTPAdapter, Retry
@@ -97,7 +96,6 @@ def fetch_gloss_assets(data, database_filename, output_folder):
             print(f"skipped - couldn't extract gloss ID")
             continue
 
-        gloss = ":".join(gloss_parts[0:-1])
         gloss_id = gloss_parts[-1]
         video_type = entry['Video_type']
         url = entry['Videofile']
