@@ -1,7 +1,4 @@
 on:
-  push:
-    branches:
-      - feature/export-from-signbank
   schedule:
   # Run monthly at 1PM UTC (~ 1AM NZT)
   - cron: 0 13 1 * *
