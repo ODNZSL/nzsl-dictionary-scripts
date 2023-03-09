@@ -1,4 +1,5 @@
 on:
+  workflow_dispatch:
   schedule:
   # Run monthly at 1PM UTC (~ 1AM NZT)
   - cron: 0 13 1 * *
