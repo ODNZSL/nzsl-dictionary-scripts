@@ -204,7 +204,7 @@ def write_sqlitefile(data, database_filename):
         """
         create table words (
           gloss, minor, maori, picture, video, handshape, location, location_identifier, variant_number, target, age_groups,
-          contains_numbers boolean, hint, id, inflection_manner_and_degree boolean, inflection_plural boolean,
+          contains_numbers boolean, hint, id PRIMARY KEY, inflection_manner_and_degree boolean, inflection_plural boolean,
           inflection_temporal boolean, is_directional boolean, is_fingerspelling boolean, is_locatable boolean,
           one_or_two_handed boolean, related_to, usage, usage_notes, word_classes, gloss_normalized,
           minor_normalized, maori_normalized
@@ -260,7 +260,7 @@ def write_sqlitefile(data, database_filename):
               :gloss_normalized,
               :minor_normalized,
               :maori_normalized
-            )
+            ) ON CONFLICT DO NOTHING
           """, entry)
         add_examples(entry, db)
         add_topics(entry, db)
