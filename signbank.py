@@ -6,6 +6,7 @@ import sqlite3
 
 import requests
 from requests.adapters import HTTPAdapter, Retry
+from urllib3.exceptions import ProtocolError
 
 DEFAULT_SIGNBANK_HOST = os.getenv("SIGNBANK_HOST", "https://signbank.nzsl.nz")
 SIGNBANK_DATASET_ID = os.getenv("SIGNBANK_DATASET_ID", 1)
@@ -26,20 +27,28 @@ def signbank_session():
 
     return s
 
-##
-# Start a requests session that is set up to retry S3 requests.
-# This resolves an issue where S3 occasionally resets the connection
-# when downloading a large number of files. It also allows for temporary
-# failures in a request.
+def get_from_s3(key):
+    """
+    Makes a GET request to S3, retrying a few times if it errors
+    or if the connection is broken before giving up entirely
 
-
-def s3_session():
+    :param key:
+    :return:
+    """
     s = requests.Session()
     retries = Retry(total=5, backoff_factor=1,
                     status_forcelist=[502, 503, 504])
     s.mount('https://', HTTPAdapter(max_retries=retries))
 
-    return s
+    # the above retry setup will handle occasional connection errors that are done
+    # with a valid HTTP request, but they won't handle when the connection is just
+    # broken, so we also have to explicitly catch protocol errors to attempt a retry
+    try:
+        return s.get(key)
+    except ProtocolError:
+        print("(had to retry get)", end=" ")
+        return s.get(key)
+
 
 ##########################
 # Dictionary data handling
@@ -110,7 +119,7 @@ def fetch_gloss_assets(data, database_filename, output_folder):
         # We don't need to download videos, just know where they are
         if filename.endswith(".png"):
             if not os.path.exists(filename):
-                asset_request = s3_session().get(entry['Videofile'])
+                asset_request = get_from_s3(entry['Videofile'])
                 with open(filename, "wb") as asset_file:
                     asset_file.write(asset_request.content)
                 print("downloaded", end=", ")
