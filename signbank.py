@@ -123,7 +123,7 @@ def fetch_gloss_assets(data, database_filename, output_folder):
         if video_type == 'main' and filename.endswith('.png'):
             db.execute("UPDATE words SET picture = :basename WHERE id = :gloss_id",
                        {'basename': basename, 'gloss_id': gloss_id})
-            print(" assigned as main picture", end=", ")
+            print("assigned as main picture", end=", ")
 
         # Update the words table with the video URL, if this is a video and of type main
         if video_type == 'main' and filename.endswith('.mp4'):
