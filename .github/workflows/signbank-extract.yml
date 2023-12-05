@@ -62,3 +62,14 @@ jobs:
           asset_path: ./nzsl.dat
           asset_name: nzsl.dat
           asset_content_type: text/plain
+      - name: Create LATEST_RELEASE_DATE file
+        run: echo "${{steps.date.outputs.date}}" > LATEST_RELEASE_DATE
+      - name: Configure git
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+      - name: Commit and push LATEST_RELEASE_DATE file
+        run: |
+          git add LATEST_RELEASE_DATE
+          git commit -m "Release ${{steps.date.outputs.date}}"
+          git push
