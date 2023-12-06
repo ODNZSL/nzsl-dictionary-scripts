@@ -118,7 +118,7 @@ def fetch_gloss_assets(data, database_filename, output_folder, download=True):
 
         # We don't need to download videos, just know where they are
         if download and filename.endswith(".png"):
-            if download and  not os.path.exists(filename):
+            if download and not os.path.exists(filename):
                 asset_request = get_from_s3(entry['Videofile'])
                 with open(filename, "wb") as asset_file:
                     asset_file.write(asset_request.content)
