@@ -3,6 +3,7 @@ import os
 import re
 import shutil
 import sqlite3
+import time
 
 import requests
 from requests.adapters import HTTPAdapter, Retry
@@ -45,9 +46,10 @@ def get_from_s3(key):
     # broken, so we also have to explicitly catch protocol errors to attempt a retry
     try:
         return s.get(key)
-    except ProtocolError:
+    except (ProtocolError, ChunkedEncodingError):
         print("(had to retry get)", end=" ")
-        return s.get(key)
+        time.sleep(2) # Wait a couple of seconds before retrying
+        return get_from_s3(key)
 
 
 ##########################
