@@ -82,8 +82,8 @@ def fetch_gloss_asset_export_file(filename):
         f.write(video_response.content)
 
 
-def fetch_gloss_assets(data, database_filename, output_folder):
-    if not os.path.exists(output_folder):
+def fetch_gloss_assets(data, database_filename, output_folder, download=True):
+    if not os.path.exists(output_folder) and download:
         os.makedirs(output_folder)
 
     db = sqlite3.connect(database_filename)
@@ -117,15 +117,15 @@ def fetch_gloss_assets(data, database_filename, output_folder):
             continue
 
         # We don't need to download videos, just know where they are
-        if filename.endswith(".png"):
-            if not os.path.exists(filename):
+        if download and filename.endswith(".png"):
+            if download and not os.path.exists(filename):
                 asset_request = get_from_s3(entry['Videofile'])
                 with open(filename, "wb") as asset_file:
                     asset_file.write(asset_request.content)
                 print("downloaded", end=", ")
             else:
                 print("already downloaded", end=", ")
-        else:
+        elif download:
             print("not an image, skipping download", end=", ")
 
         # Update the words table with the picture, if this is an image and of type main

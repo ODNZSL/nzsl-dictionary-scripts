@@ -1,0 +1,25 @@
+
+on:
+  # Must be run manually
+  workflow_dispatch:
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    name: 'Extracts and prepares Signbank database data, bypassing asset processing'
+    steps:
+      - uses: actions/checkout@v2
+      - run: make build update_signbank_database
+        env:
+          SIGNBANK_HOST: ${{ secrets.SIGNBANK_HOST }}
+          SIGNBANK_USERNAME: ${{ secrets.SIGNBANK_USERNAME }}
+          SIGNBANK_PASSWORD: ${{ secrets.SIGNBANK_PASSWORD }}
+      - name: Upload nzsl.db
+        uses: actions/upload-artifact@v2
+        with:
+          name: nzsl.db
+          path: ./nzsl.db
+      - name: Upload nzsl.dat
+        uses: actions/upload-artifact@v2
+        with:
+          name: nzsl.dat
+          path: ./nzsl.dat
