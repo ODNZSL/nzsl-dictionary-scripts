@@ -13,6 +13,7 @@ DEFAULT_SIGNBANK_HOST = os.getenv("SIGNBANK_HOST", "https://signbank.nzsl.nz")
 SIGNBANK_DATASET_ID = os.getenv("SIGNBANK_DATASET_ID", 1)
 SIGNBANK_USERNAME = os.getenv("SIGNBANK_USERNAME")
 SIGNBANK_PASSWORD = os.getenv("SIGNBANK_PASSWORD")
+SIGNBANK_WEB_READY_TAG_ID = os.getenv("SIGNBANK_WEB_READY_TAG_ID")
 
 ##
 # Start a requests session that is authenticated to Signbank
@@ -57,10 +58,10 @@ def get_from_s3(key):
 ##########################
 
 
-def fetch_gloss_export_file(filename):
+def fetch_gloss_export_file(filename, filters = {}):
     session = signbank_session()
     response = session.get("%s/dictionary/advanced/" % DEFAULT_SIGNBANK_HOST,
-                           params={"dataset": SIGNBANK_DATASET_ID, "published": 'on', "format": 'CSV'})
+                           params={**filters, "dataset": SIGNBANK_DATASET_ID, "format": 'CSV'})
     response.raise_for_status()
     with open(filename, "wb") as f:
         f.write(response.content)
