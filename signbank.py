@@ -6,6 +6,7 @@ import sqlite3
 import time
 
 import requests
+from datetime import datetime
 from requests.adapters import HTTPAdapter, Retry
 from urllib3.exceptions import ProtocolError
 
@@ -211,6 +212,10 @@ def write_sqlitefile(data, database_filename):
     if os.path.exists(database_filename):
         os.unlink(database_filename)
     db = sqlite3.connect(database_filename)
+
+    version = datetime.utcnow().strftime("%Y%m%d")
+    db.execute(f"PRAGMA user_version = {version}")
+
     db.execute(
         """
         create table words (
