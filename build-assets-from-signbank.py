@@ -11,6 +11,9 @@ parser = OptionParser()
 parser.add_option("-c", action="store_true", dest="cleanup",
                   help="clean up files after execution")
 parser.add_option("--skip-assets", action="store_true", help="Export Signbank data, but not supporting media", dest="skip_assets")
+parser.add_option("--prerelease", action="store_true",
+                                  help="Export prerelease Signbank data rather than published data",
+                                  dest="prerelease")
 
 (options, args) = parser.parse_args()
 
@@ -22,8 +25,14 @@ assets_folder = 'signbank-assets'
 pictures_folder = 'assets'
 download = not options.skip_assets
 
+filters = {}
+if options.prerelease:
+    filters['tags'] = signbank.SIGNBANK_WEB_READY_TAG_ID
+else:
+    filters['published'] = 'on'
+
 print("Step 1: Fetching the latest signs from Signbank")
-signbank.fetch_gloss_export_file(filename)
+signbank.fetch_gloss_export_file(filename, filters)
 data = signbank.parse_signbank_csv(filename)
 
 
