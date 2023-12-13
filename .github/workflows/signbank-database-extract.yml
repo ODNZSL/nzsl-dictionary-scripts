@@ -17,9 +17,9 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: $${ env.AWS_ROLE_ARN }}
+          role-to-assume: $${ secrets.AWS_ROLE_ARN }}
           role-session-name: nzsl-dictionary-scripts-extract
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: ${{ vars.AWS_REGION }}
       - uses: actions/checkout@v2
       - name: Export Signbank database
         run: |
@@ -38,7 +38,7 @@ jobs:
           SIGNBANK_WEB_READY_TAG_ID: ${{ vars.SIGNBANK_WEB_READY_TAG_ID }}
       - name: Upload nzsl.db to S3
         run: |
-          aws s3 cp ./nzsl.db s3://${{ env.AWS_S3_BUCKET_NAME }}/${{ env.AWS_S3_DEPLOYMENT_PATH }}/nzsl.db --acl=${{ env.AWS_S3_DEPLOYMENT_ACL }}}
+          aws s3 cp ./nzsl.db s3://${{ secrets.AWS_S3_BUCKET_NAME }}/${{ secrets.AWS_S3_DEPLOYMENT_PATH }}/nzsl.db --acl=${{ secrets.AWS_S3_DEPLOYMENT_ACL }}}
       - name: Upload nzsl.db
         if: github.event.inputs.environment == 'Production'
         uses: actions/upload-artifact@v2
