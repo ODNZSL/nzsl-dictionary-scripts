@@ -13,6 +13,7 @@ jobs:
   extract:
     runs-on: ubuntu-latest
     name: "Extracts and prepares Signbank database data, bypassing asset processing"
+    environment: ${{ github.event.inputs.environment }}
     steps:
       - uses: actions/checkout@v2
       - name: Configure AWS Credentials
@@ -20,7 +21,7 @@ jobs:
         with:
           role-to-assume: "${{ secrets.AWS_ROLE_ARN }}"
           role-session-name: nzsl-dictionary-scripts-extract
-          aws-region: ap-southeast-2
+          aws-region: "${{ vars.AWS_ROLE_REGION }}"
       - name: Export Signbank database
         run: |
           if [[ "${{ github.event.inputs.environment }}" == "Production" ]]; then
