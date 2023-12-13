@@ -20,7 +20,7 @@ jobs:
         with:
           role-to-assume: "${ secrets.AWS_ROLE_ARN }}"
           role-session-name: nzsl-dictionary-scripts-extract
-          aws-region: "${{ vars.AWS_REGION }}"
+          aws-region: "${{ vars.AWS_ROLE_REGION }}"
       - name: Export Signbank database
         run: |
           if [[ "${{ github.event.inputs.environment }}" == "Production" ]]; then
