@@ -1,31 +1,53 @@
-
 on:
   # Must be run manually
   workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to export Signbank data to"
+        type: environment
+        required: true
+permissions:
+  id-token: write   # This is required for requesting the JWT
+  contents: read    # This is required for actions/checkout
 jobs:
   extract:
     runs-on: ubuntu-latest
-    name: 'Extracts and prepares Signbank database data, bypassing asset processing'
+    name: "Extracts and prepares Signbank database data, bypassing asset processing"
     steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: $${ env.AWS_ROLE_ARN }}
+          role-session-name: nzsl-dictionary-scripts-extract
+          aws-region: ${{ env.AWS_REGION }}
       - uses: actions/checkout@v2
-      - run: make build update_signbank_database
-        env:
-          SIGNBANK_HOST: ${{ secrets.SIGNBANK_HOST }}
-          SIGNBANK_USERNAME: ${{ secrets.SIGNBANK_USERNAME }}
-          SIGNBANK_PASSWORD: ${{ secrets.SIGNBANK_PASSWORD }}
-      - name: Upload nzsl.db
-        uses: actions/upload-artifact@v2
-        with:
-          name: nzsl.db
-          path: ./nzsl.db
-      - name: Upload nzsl.dat
-        uses: actions/upload-artifact@v2
-        with:
-          name: nzsl.dat
-          path: ./nzsl.dat
-      - run: make build update_signbank_prerelease_database
+      - name: Export Signbank database
+        run: |
+          if [[ "${{ github.event.inputs.environment }}" == "Production" ]]; then
+            make build update_signbank_database
+          elif [[ "${{ github.event.inputs.environment }}" == "Prerelease" ]]; then
+            make build update_signbank_prerelease_database
+          else
+            echo "Unknown environment: ${{ github.event.inputs.environment }}"
+            exit 1
+          fi
         env:
           SIGNBANK_HOST: ${{ secrets.SIGNBANK_HOST }}
           SIGNBANK_USERNAME: ${{ secrets.SIGNBANK_USERNAME }}
           SIGNBANK_PASSWORD: ${{ secrets.SIGNBANK_PASSWORD }}
           SIGNBANK_WEB_READY_TAG_ID: ${{ vars.SIGNBANK_WEB_READY_TAG_ID }}
+      - name: Upload nzsl.db to S3
+        run: |
+          aws s3 cp ./nzsl.db s3://${{ env.AWS_S3_BUCKET_NAME }}/${{ env.AWS_S3_DEPLOYMENT_PATH }}/nzsl.db --acl=${{ env.AWS_S3_DEPLOYMENT_ACL }}}
+      - name: Upload nzsl.db
+        if: github.event.inputs.environment == 'Production'
+        uses: actions/upload-artifact@v2
+        with:
+          name: nzsl.db
+          path: ./nzsl.db
+      - name: Upload nzsl.dat
+        if: github.event.inputs.environment == 'Production'
+        uses: actions/upload-artifact@v2
+        with:
+          name: nzsl.dat
+          path: ./nzsl.dat
