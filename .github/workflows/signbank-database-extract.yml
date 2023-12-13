@@ -39,7 +39,7 @@ jobs:
           SIGNBANK_WEB_READY_TAG_ID: ${{ vars.SIGNBANK_WEB_READY_TAG_ID }}
       - name: Upload nzsl.db to S3
         run: |
-          aws s3 cp ./nzsl.db s3://${{ secrets.AWS_S3_BUCKET_NAME }}/${{ secrets.AWS_S3_DEPLOYMENT_PATH }}/nzsl.db --acl=${{ secrets.AWS_S3_DEPLOYMENT_ACL }}}
+          aws s3 cp ./nzsl.db s3://${{ secrets.AWS_S3_BUCKET_NAME }}/${{ secrets.AWS_S3_DEPLOYMENT_PATH }}/nzsl.db --acl ${{ secrets.AWS_S3_DEPLOYMENT_ACL }}}
       - name: Upload nzsl.db
         if: github.event.inputs.environment == 'Production'
         uses: actions/upload-artifact@v2
