@@ -80,7 +80,8 @@ def parse_signbank_csv(filename):
 ##########################
 def fetch_gloss_asset_export_file(filename):
     session = signbank_session()
-    video_response = session.get("%s/video/csv" % DEFAULT_SIGNBANK_HOST)
+
+    video_response = session.get("%s/video/csv" % DEFAULT_SIGNBANK_HOST, params=filters)
     video_response.raise_for_status()
     with open(filename, "wb") as f:
         f.write(video_response.content)
