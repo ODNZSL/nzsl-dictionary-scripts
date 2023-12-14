@@ -44,6 +44,7 @@ print("Step 4: Fetching assets from signbank")
 signbank.fetch_gloss_asset_export_file(video_filename, { 'include_private': options.prerelease })
 asset_data = signbank.parse_signbank_csv(video_filename)
 signbank.fetch_gloss_assets(asset_data, database_filename, assets_folder, download=download)
+signbank.prune_orphan_assets(database_filename)
 
 print("Step 4: Write out nzsl.dat for Android")
 signbank.write_datfile(database_filename, dat_file_filename)
