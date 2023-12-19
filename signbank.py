@@ -22,8 +22,8 @@ SIGNBANK_WEB_READY_TAG_ID = os.getenv("SIGNBANK_WEB_READY_TAG_ID")
 
 def signbank_session():
     s = requests.Session()
-    s.get("%s/accounts/login/" % DEFAULT_SIGNBANK_HOST)
-    s.post("%s/accounts/login/" % DEFAULT_SIGNBANK_HOST,
+    s.get(f"{DEFAULT_SIGNBANK_HOST}/accounts/login/")
+    s.post(f"{DEFAULT_SIGNBANK_HOST}/accounts/login/",
            data={'username': SIGNBANK_USERNAME, 'password': SIGNBANK_PASSWORD,
                  'csrfmiddlewaretoken': s.cookies['csrftoken']},
            headers={'Referer': DEFAULT_SIGNBANK_HOST})
@@ -61,7 +61,7 @@ def get_from_s3(key):
 
 def fetch_gloss_export_file(filename, filters = {}):
     session = signbank_session()
-    response = session.get("%s/dictionary/advanced/" % DEFAULT_SIGNBANK_HOST,
+    response = session.get(f"{DEFAULT_SIGNBANK_HOST}/dictionary/advanced/",
                            params={**filters, "dataset": SIGNBANK_DATASET_ID, "format": 'CSV'})
     response.raise_for_status()
     with open(filename, "wb") as f:
@@ -81,7 +81,7 @@ def parse_signbank_csv(filename):
 def fetch_gloss_asset_export_file(filename, filters = {}):
     session = signbank_session()
 
-    video_response = session.get("%s/video/csv" % DEFAULT_SIGNBANK_HOST, params=filters)
+    video_response = session.get(f"{DEFAULT_SIGNBANK_HOST}/video/csv", params=filters)
     video_response.raise_for_status()
     with open(filename, "wb") as f:
         f.write(video_response.content)
