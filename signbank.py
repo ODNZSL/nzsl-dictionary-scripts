@@ -22,8 +22,8 @@ SIGNBANK_WEB_READY_TAG_ID = os.getenv("SIGNBANK_WEB_READY_TAG_ID")
 
 def signbank_session():
     s = requests.Session()
-    s.get("%s/accounts/login/" % DEFAULT_SIGNBANK_HOST)
-    s.post("%s/accounts/login/" % DEFAULT_SIGNBANK_HOST,
+    s.get(f"{DEFAULT_SIGNBANK_HOST}/accounts/login/")
+    s.post(f"{DEFAULT_SIGNBANK_HOST}/accounts/login/",
            data={'username': SIGNBANK_USERNAME, 'password': SIGNBANK_PASSWORD,
                  'csrfmiddlewaretoken': s.cookies['csrftoken']},
            headers={'Referer': DEFAULT_SIGNBANK_HOST})
@@ -61,7 +61,7 @@ def get_from_s3(key):
 
 def fetch_gloss_export_file(filename, filters = {}):
     session = signbank_session()
-    response = session.get("%s/dictionary/advanced/" % DEFAULT_SIGNBANK_HOST,
+    response = session.get(f"{DEFAULT_SIGNBANK_HOST}/dictionary/advanced/",
                            params={**filters, "dataset": SIGNBANK_DATASET_ID, "format": 'CSV'})
     response.raise_for_status()
     with open(filename, "wb") as f:
@@ -78,9 +78,10 @@ def parse_signbank_csv(filename):
 ##########################
 # Asset handling
 ##########################
-def fetch_gloss_asset_export_file(filename):
+def fetch_gloss_asset_export_file(filename, filters = {}):
     session = signbank_session()
-    video_response = session.get("%s/video/csv" % DEFAULT_SIGNBANK_HOST)
+
+    video_response = session.get(f"{DEFAULT_SIGNBANK_HOST}/video/csv", params=filters)
     video_response.raise_for_status()
     with open(filename, "wb") as f:
         f.write(video_response.content)
@@ -171,6 +172,20 @@ def fetch_gloss_assets(data, database_filename, output_folder, download=True):
 
 # Modify filenames to match the Android requirements (lowercase a-z and _ only)
 # Since iOS uses the same underlying data, update iOS to use the same image names.
+
+
+def prune_orphan_assets(database_filename):
+    db = sqlite3.connect(database_filename)
+    cursor = db.cursor()
+    cursor.execute(
+        """
+        DELETE FROM videos
+        WHERE word_id NOT IN (SELECT word_id FROM words);
+        """
+    )
+    deleted_records = cursor.rowcount
+    print(f"Pruned {deleted_records} assets not associated with a word")
+
 
 
 def normalize_asset_filename(filename):
