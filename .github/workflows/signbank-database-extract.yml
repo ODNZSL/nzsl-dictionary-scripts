@@ -52,3 +52,7 @@ jobs:
         with:
           name: nzsl.dat
           path: ./nzsl.dat
+      - name: Restart Heroku application(s)
+        run: |
+            heroku restart --app ${{ secrets.HEROKU_DICTIONARY_APP_NAME }} --api-token ${{ secrets.HEROKU_DICTIONARY_API_TOKEN }}
+            heroku restart --app ${{ secrets.HEROKU_SHARE_APP_NAME }} --api-token ${{ secrets.HEROKU_SHARE_API_TOKEN }}
