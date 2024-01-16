@@ -18,6 +18,7 @@ parser.add_option("--prerelease", action="store_true",
 (options, args) = parser.parse_args()
 
 filename = 'signbank-glosses.csv'
+prerelease_filename = 'signbank-glosses-prerelease.csv'
 video_filename = 'signbank-gloss-assets.csv'
 dat_file_filename = "nzsl.dat"
 database_filename = 'nzsl.db'
@@ -31,17 +32,22 @@ if options.prerelease:
 else:
     filters['published'] = 'on'
 
-print("Step 1: Fetching the latest signs from Signbank")
-signbank.fetch_gloss_export_file(filename, filters)
+print("Step 1: Fetching the latest published signs from Signbank")
+signbank.fetch_gloss_export_file(filename, { 'published': 'on' })
 data = signbank.parse_signbank_csv(filename)
 
+if options.prerelease:
+    print("Step 1a: Fetching the latest prerelease signs from Signbank")
+    signbank.fetch_gloss_export_file(prerelease_filename, { 'tags': signbank.SIGNBANK_WEB_READY_TAG_ID })
+    data += signbank.parse_signbank_csv(prerelease_filename)
 
-print("Step 3: Write out sqlite nzsl.db for iOS")
+print("Step 2: Write out sqlite nzsl.db for iOS")
 signbank.write_sqlitefile(data, database_filename)
 
 
-print("Step 4: Fetching assets from signbank")
+print("Step 3: Fetching assets from signbank")
 signbank.fetch_gloss_asset_export_file(video_filename)
+
 asset_data = signbank.parse_signbank_csv(video_filename)
 signbank.fetch_gloss_assets(asset_data, database_filename, assets_folder, download=download)
 signbank.prune_orphan_assets(database_filename)
@@ -59,6 +65,7 @@ if download:
 if options.cleanup:
     print("Step 7: Cleanup")
     os.remove(filename)
+    os.remove(prerelease_filename)
     os.remove(dat_file_filename)
     os.remove(database_filename)
     shutil.rmtree(pictures_folder)
