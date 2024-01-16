@@ -46,7 +46,8 @@ signbank.write_sqlitefile(data, database_filename)
 
 
 print("Step 3: Fetching assets from signbank")
-signbank.fetch_gloss_asset_export_file(video_filename, { 'include_private': options.prerelease })
+signbank.fetch_gloss_asset_export_file(video_filename)
+
 asset_data = signbank.parse_signbank_csv(video_filename)
 signbank.fetch_gloss_assets(asset_data, database_filename, assets_folder, download=download)
 signbank.prune_orphan_assets(database_filename)
