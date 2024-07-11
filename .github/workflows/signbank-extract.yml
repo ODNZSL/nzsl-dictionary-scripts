@@ -73,3 +73,15 @@ jobs:
           git add LATEST_RELEASE_DATE
           git commit -m "Release ${{steps.date.outputs.date}}"
           git push
+      - name: Report to Slack
+        if: always()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
+          SLACK_ICON: https://github.com/ackama.png?size=48
+          SLACK_USERNAME: 'Signbank Exporter'
+          SLACK_FOOTER: ''
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_MESSAGE:
+            "${{ format('{0} job result: {1}', github.job, job.status) }}"
