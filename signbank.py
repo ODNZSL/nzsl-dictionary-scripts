@@ -8,6 +8,7 @@ import time
 import requests
 from datetime import datetime
 from requests.adapters import HTTPAdapter, Retry
+from requests.exceptions import ChunkedEncodingError
 from urllib3.exceptions import ProtocolError
 
 DEFAULT_SIGNBANK_HOST = os.getenv("SIGNBANK_HOST", "https://signbank.nzsl.nz")
