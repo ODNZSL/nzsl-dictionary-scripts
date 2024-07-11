@@ -11,7 +11,7 @@ jobs:
       - name: Get current date
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - run: make build update_signbank_assets
         env:
           SIGNBANK_HOST: ${{ secrets.SIGNBANK_HOST }}
