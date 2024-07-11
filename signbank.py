@@ -62,7 +62,7 @@ def get_from_s3(key):
 def fetch_gloss_export_file(filename, filters = {}):
     session = signbank_session()
     response = session.get(f"{DEFAULT_SIGNBANK_HOST}/dictionary/advanced/",
-                           params={**filters, "dataset": SIGNBANK_DATASET_ID, "format": 'CSV'})
+                           params={**filters, "dataset": SIGNBANK_DATASET_ID, "format": 'CSV-standard'})
     response.raise_for_status()
     with open(filename, "wb") as f:
         f.write(response.content)
