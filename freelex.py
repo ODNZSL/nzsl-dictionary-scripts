@@ -1,8 +1,6 @@
-import sys
 import os
 import urllib.parse
 import urllib.request
-import xml.etree.ElementTree as ET
 import shutil
 import sqlite3
 
@@ -104,4 +102,3 @@ def normalise(s):
              .replace("ī", "i")
              .replace("ō", "o")
              .replace("ū", "u"))
-
