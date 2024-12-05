@@ -5,7 +5,6 @@ from optparse import OptionParser
 
 import image_processing
 import signbank
-from log import print_run_msg
 
 parser = OptionParser()
 parser.add_option("-c", action="store_true", dest="cleanup",
