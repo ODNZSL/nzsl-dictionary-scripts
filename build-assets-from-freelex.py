@@ -6,7 +6,6 @@ import xml.etree.ElementTree as ET
 from optparse import OptionParser
 
 import freelex
-from log import print_run_msg
 
 parser = OptionParser()
 parser.add_option("-c", action="store_true", dest="cleanup",
