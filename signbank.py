@@ -48,7 +48,11 @@ def get_from_s3(key):
     # with a valid HTTP request, but they won't handle when the connection is just
     # broken, so we also have to explicitly catch protocol errors to attempt a retry
     try:
-        return s.get(key)
+        response = s.get(key)
+
+        response.raise_for_status()
+
+        return response
     except (ProtocolError, ChunkedEncodingError):
         print("(had to retry get)", end=" ")
         time.sleep(2) # Wait a couple of seconds before retrying
