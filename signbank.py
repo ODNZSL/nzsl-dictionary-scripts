@@ -181,10 +181,11 @@ def prune_orphan_assets(database_filename):
     cursor.execute(
         """
         DELETE FROM videos
-        WHERE word_id NOT IN (SELECT word_id FROM words);
+        WHERE videos.word_id NOT IN (SELECT words.id FROM words);
         """
     )
     deleted_records = cursor.rowcount
+    db.commit()
     print(f"Pruned {deleted_records} assets not associated with a word")
 
 
